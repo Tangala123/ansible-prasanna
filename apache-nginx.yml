@@ -1,0 +1,36 @@
+- name: Install and configure Nginx on the first EC2
+  hosts: nginx
+  become: yes
+  tasks:
+    - name: Install Nginx
+      yum: name=nginx state=present  # For CentOS/RedHat
+
+    - name: Start and enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+- name: Install and deploy HTTPD on the second and third EC2
+  hosts: httpd
+  become: yes
+  tasks:
+    - name: Install HTTPD
+      yum: name=httpd state=present    # For CentOS/RedHat
+
+    - name: Start and enable HTTPD
+      service:
+        name: httpd   # Replace with 'httpd' for CentOS/RedHat
+        state: started
+        enabled: yes
+
+    - name: Deploy a static page
+      copy:
+        dest: /var/www/html/index.html
+        content: |
+          <html>
+          <head><title>Static Page</title></head>
+          <body>
+            <h1>Welcome to HTTPD Server</h1>
+          </body>
+          </html>
